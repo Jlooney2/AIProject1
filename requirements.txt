@@ -1,0 +1,2 @@
+pytz==2018.9
+virtualenv==16.2.0
