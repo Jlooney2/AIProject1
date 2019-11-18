@@ -40,7 +40,7 @@ def run():
     # Read
     dataset = pd.read_csv(f'processed.csv')
 
-    # Fill NaN
+    # Drop NaN
     print('RF Dropping NaN values...')
     # dataset.fillna(dataset.mean(), inplace=True)
     print('Initial size ', dataset.size)
@@ -81,3 +81,9 @@ def run():
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_prediction)))
     print(f'R-2: {metrics.r2_score(y_test, y_prediction)}')
     print(f"Coefficients: {regressor.coef_}")
+
+    plt.figure()
+    plt.plot(y_prediction[0:30], label='pred')
+    plt.plot(y_test[0:30], 'gd', label='test')
+    plt.legend(loc="best")
+    plt.show()
