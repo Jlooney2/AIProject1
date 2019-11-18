@@ -1,15 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import metrics
-import time
 
 
 def run():
-    time1 = time.time()
     print('RF Reading...:')
     # Read
     dataset = pd.read_csv(f'processed.csv')
@@ -30,34 +27,27 @@ def run():
     ds_size = dataset.keys().size - 1
     x = encoded_dataset.iloc[:, 0:ds_size].values
     y = encoded_dataset.iloc[:, ds_size].values
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
-    print('RF Scaling...:')
-    # Scale data
-    sc = StandardScaler()
-    x_train = sc.fit_transform(x_train)
-    x_test = sc.transform(x_test)
+    err = 0
+    kfold_count = 5
+    ss = StratifiedKFold(n_splits=kfold_count, shuffle=False, random_state=42)
+    for train_index, test_index in ss.split(x, y):
+        x_train, x_test = x[train_index], x[test_index]
+        y_train, y_test = y[train_index], y[test_index]
 
-    print('RF Training...:')
-    # Train
-    regressor = RandomForestRegressor(n_estimators=100, max_depth=5, max_leaf_nodes=15, random_state=0)
-    regressor.fit(x_train, y_train)
-    y_prediction = regressor.predict(x_test)
+        print('RF Scaling...:')
+        # Scale data
+        sc = StandardScaler()
+        x_train = sc.fit_transform(x_train)
+        x_test = sc.transform(x_test)
 
-    time2 = time.time()
-    print('It took %s seconds to load and train the data.' % (time2 - time1))
+        print('RF Training...:')
+        # Train
+        regressor = RandomForestRegressor(n_estimators=100, max_depth=5, max_leaf_nodes=15, random_state=0)
+        regressor.fit(x_train, y_train)
+        y_prediction = regressor.predict(x_test)
 
-    print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_prediction))
-    print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_prediction))
-    print('Max Error: ', metrics.max_error(y_test, y_prediction))
-    print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_prediction)))
-    print(regressor.feature_importances_)
 
-    plt.figure()
-    plt.plot(y_prediction[0:30], label='pred')
-    plt.plot(y_test[0:30], 'gd', label='test')
-    plt.legend(loc="best")
-    plt.show()
-
-    # testdata = [[2009,'Hartford','31 WOODLAND ST UNIT 6D',46450.0,'Condo']]
-    # print(metrics.mean_absolute_error(, y_prediction))
+        err += np.sqrt(metrics.mean_absolute_error(y_test, y_prediction))
+        print(err)
+    print('Average Root Mean Squared Error: ', err/kfold_count)
