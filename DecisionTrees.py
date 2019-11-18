@@ -1,7 +1,6 @@
 import sklearn
-from sklearn import tree
-from sklearn import metrics
-from sklearn import preprocessing
+from sklearn import tree, metrics
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 import pandas
 import numpy as np
 import time
@@ -16,7 +15,7 @@ def run():
     dataset = pandas.read_csv("processed.csv")
     dataset = dataset.dropna()
 
-    le = sklearn.preprocessing.LabelEncoder()
+    le = LabelEncoder()
     encoded = dataset.apply(le.fit_transform)
 
     ds_size = dataset.keys().size - 1
@@ -24,7 +23,7 @@ def run():
     y = encoded.iloc[:, ds_size].values
     x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.1, random_state=0)
 
-    sc = sklearn.preprocessing.StandardScaler()
+    sc = StandardScaler()
 
     x_train = sc.fit_transform(x_train)
     x_test = sc.transform(x_test)
