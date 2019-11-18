@@ -16,6 +16,10 @@ def run():
     # Read
     dataset = pd.read_csv(f'processed.csv')
 
+    ds_size = dataset.keys().size - 1
+
+    print(ds_size)
+
     # Fill NaN
     print('RF Dropping NaN values...')
     # dataset.fillna(dataset.mean(), inplace=True)
@@ -30,8 +34,8 @@ def run():
 
     print('RF Setup data...:')
     # Setup data
-    x = encoded_dataset.iloc[:, 0:5].values
-    y = encoded_dataset.iloc[:, 5].values
+    x = encoded_dataset.iloc[:, 0:ds_size].values
+    y = encoded_dataset.iloc[:, ds_size].values
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
     print('RF Scaling...:')
@@ -63,11 +67,3 @@ def run():
 
     # testdata = [[2009,'Hartford','31 WOODLAND ST UNIT 6D',46450.0,'Condo']]
     # print(metrics.mean_absolute_error(, y_prediction))
-
-
-
-
-
-
-
-run()
