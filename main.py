@@ -28,25 +28,21 @@ def run_main():
             print('----------------------------------------------------------------')
             rgr.run()
             print('----------------------------------------------------------------')
-            input()
         elif user_input is '2':
             print('----------------------------------------------------------------')
             dt.run()
             print('----------------------------------------------------------------')
-            input()
         elif user_input is '3':
             print('----------------------------------------------------------------')
             frst.run()
             print('----------------------------------------------------------------')
-            input()
         elif user_input is '4':
             keep_running = False
             print('Goodbye!')
-            print()
+            exit(0)
         else:
             print("Please enter a valid number.")
             print("Example: To select Regression, type the number 1 and press enter.")
-            input()
 
 
 run_main()
