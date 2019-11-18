@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import metrics
-
 import time
 
 
@@ -17,7 +16,6 @@ def run():
 
     # Fill NaN
     print('RF Dropping NaN values...')
-    # dataset.fillna(dataset.mean(), inplace=True)
     print('Initial size ', dataset.size)
     dataset.dropna(inplace=True)
     print('Ending size ', dataset.size)
@@ -51,7 +49,7 @@ def run():
 
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_prediction))
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_prediction))
-    print('Max: ', metrics.max_error(y_test, y_prediction))
+    print('Max Error: ', metrics.max_error(y_test, y_prediction))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_prediction)))
     print(regressor.feature_importances_)
 
