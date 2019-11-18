@@ -30,8 +30,9 @@ def run():
 
     print('RF Setup data...:')
     # Setup data
-    x = encoded_dataset.iloc[:, 0:5].values
-    y = encoded_dataset.iloc[:, 5].values
+    ds_size = dataset.keys().size - 1
+    x = encoded_dataset.iloc[:, 0:ds_size].values
+    y = encoded_dataset.iloc[:, ds_size].values
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
     print('RF Scaling...:')
