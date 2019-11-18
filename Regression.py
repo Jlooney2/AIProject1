@@ -1,29 +1,57 @@
 import numpy as np
 from sklearn import linear_model
 from sklearn import preprocessing
+from sklearn.preprocessing import LabelEncoder
 import pandas as pd
+import time
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
+import matplotlib.pyplot as plt
 
-data = pd.read_csv('processed.csv')
-df = pd.DataFrame(data)
+time1 = time.time()
+print('RF Reading...:')
+# Read
+dataset = pd.read_csv(f'processed.csv')
 
-le = preprocessing.LabelEncoder()
-le.fit(df['Town'])
-list(le.classes_)
-le.transform(df['Town'])
-print(df.describe())
-print(df)
-#df['Town'] = df['Town'].astype(int)
-#df['Address'] = data['Address'].astype(int)
-#df['PropertyType'] = data['PropertyType'].astype(int)
-#df['ResidentialType'] = data['ResidentialType'].astype(int)
+# Fill NaN
+print('RF Dropping NaN values...')
+# dataset.fillna(dataset.mean(), inplace=True)
+print('Initial size ', dataset.size)
+dataset.dropna(inplace=True)
+print('Ending size ', dataset.size)
 
-#train = df[['ListYear','Town','Address','AssessedValue','PropertyType', 'ResidentialType']]
-#label = df[['SaleAmount']]
+print('RF Encoding...:')
+# Encode
+le = LabelEncoder()
+encoded_dataset = dataset.apply(le.fit_transform)
+print(le.classes_)
 
-#model = linear_model.LinearRegression()
-#model.fit(train, label)
+print('RF Setup data...:')
+# Setup data
+x = encoded_dataset.iloc[:, 0:5].values
+y = encoded_dataset.iloc[:, 5].values
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
-#instance_to_predict = np.array([2010, 'Andover', '126 SHODDY MILL ROAD', 100000, 'Residential', 'Single Family'])
-#instance_to_predict = instance_to_predict.reshape(1,-1)
-#prediction = model.predict(instance_to_predict)
-#print(f"Predicted y value for x= {instance_to_predict} is {prediction}")
+print('RF Scaling...:')
+# Scale data
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+x_test = sc.transform(x_test)
+
+print('RF Training...:')
+# Train
+regressor = linear_model.LinearRegression()
+regressor.fit(x_train, y_train)
+
+y_prediction = regressor.predict(x_test)
+
+time2 = time.time()
+print('It took %s seconds to load and train the data.' % ((time2 - time1) * 1000000.0))
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_prediction))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_prediction))
+print('Max: ', metrics.max_error(y_test, y_prediction))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_prediction)))
+print(f"Coefficients: {regressor.coef_}")
+
