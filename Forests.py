@@ -27,7 +27,6 @@ def run():
     # Encode
     le = LabelEncoder()
     encoded_dataset = dataset.apply(le.fit_transform)
-    print(le.classes_)
 
     print('RF Setup data...:')
     # Setup data
@@ -48,7 +47,7 @@ def run():
     y_prediction = regressor.predict(x_test)
 
     time2 = time.time()
-    print('It took %s seconds to load and train the data.' % ((time2 - time1) * 1000000.0))
+    print('It took %s seconds to load and train the data.' % (time2 - time1))
 
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_prediction))
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_prediction))
