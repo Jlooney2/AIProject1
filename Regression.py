@@ -55,6 +55,7 @@ def run():
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_prediction))
     print('Max: ', metrics.max_error(y_test, y_prediction))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_prediction)))
+    print(f'R-2: {metrics.r2_score(y_test, y_prediction)}')
     print(f"Coefficients: {regressor.coef_}")
 
     plt.figure()
