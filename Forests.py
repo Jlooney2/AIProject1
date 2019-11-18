@@ -13,9 +13,9 @@ def run():
 
     # Fill NaN
     print('RF Dropping NaN values...')
-    print('Initial size ', dataset.size)
+    print('Initial size ', dataset.shape)
     dataset.dropna(inplace=True)
-    print('Ending size ', dataset.size)
+    print('Ending size ', dataset.shape)
 
     print('RF Encoding...:')
     # Encode
@@ -30,7 +30,7 @@ def run():
 
     err = 0
     kfold_count = 5
-    ss = StratifiedKFold(n_splits=kfold_count, shuffle=False, random_state=42)
+    ss = StratifiedKFold(n_splits=kfold_count, shuffle=True, random_state=42)
     for train_index, test_index in ss.split(x, y):
         x_train, x_test = x[train_index], x[test_index]
         y_train, y_test = y[train_index], y[test_index]
@@ -49,5 +49,5 @@ def run():
 
 
         err += np.sqrt(metrics.mean_absolute_error(y_test, y_prediction))
-        print(err)
+        print(np.sqrt(metrics.mean_absolute_error(y_test, y_prediction)))
     print('Average Root Mean Squared Error: ', err/kfold_count)
