@@ -1,5 +1,6 @@
 import Preprocessor as prepro
 import Forests as frst
+import DecisionTrees as dt
 import Regression as rgr
 
 
@@ -30,6 +31,7 @@ def run_main():
             input()
         elif user_input is '2':
             print('----------------------------------------------------------------')
+            dt.run()
             print('----------------------------------------------------------------')
             input()
         elif user_input is '3':

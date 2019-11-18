@@ -9,7 +9,7 @@ import graphviz
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
-def runDecisionTree():
+def run():
     time1 = time.time()
     file = pandas.read_csv(".\processed.csv")
     file = file.dropna()
@@ -45,4 +45,3 @@ def runDecisionTree():
     print('Root Mean Squared Error:', '{0:,.2f}'.format(np.sqrt(metrics.mean_squared_error(y_test, y_prediction))))
     print(list(file))
     print(treeRegressor.feature_importances_)
-runDecisionTree()
