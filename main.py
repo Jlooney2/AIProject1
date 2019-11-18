@@ -1,5 +1,6 @@
 import Preprocessor as prepro
 import Forests as frst
+import DecisionTrees as dt
 import Regression as rgr
 
 
@@ -29,7 +30,7 @@ def run_main():
             print('----------------------------------------------------------------')
         elif user_input is '2':
             print('----------------------------------------------------------------')
-            # dt.run_kfold()
+            dt.run_kfold()
             print('----------------------------------------------------------------')
         elif user_input is '3':
             print('----------------------------------------------------------------')
