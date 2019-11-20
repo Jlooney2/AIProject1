@@ -2,11 +2,18 @@ import Preprocessor as prepro
 import Forests as frst
 import DecisionTrees as dt
 import Regression as rgr
+import FileCleaner
 
 
 def run_main():
     # self.data_columns = ['ListYear', 'Town', 'Address', 'AssessedValue', 'PropertyType', 'SaleAmount']
     data_columns = ['ListYear', 'Town', 'Address', 'PropertyType', 'AssessedValue', 'SaleAmount']
+
+    print('Clean file? (y/n)')
+    user_input = input()
+
+    if user_input is 'y' or user_input is 'Y':
+        FileCleaner.clean('data.csv')
 
     print('Reformat file? (y/n)')
     user_input = input()
