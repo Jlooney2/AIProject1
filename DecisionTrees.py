@@ -1,6 +1,6 @@
 import sklearn
 from sklearn import tree, metrics
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import KFold, StratifiedKFold, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import pandas
 import numpy as np
@@ -9,6 +9,24 @@ import graphviz
 import os
 
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
+
+def run_gsearch():
+    dataset = pandas.read_csv("processed.csv")
+    dataset = dataset.dropna()
+
+    le = LabelEncoder()
+    encoded = dataset.apply(le.fit_transform)
+
+    ds_size = dataset.keys().size - 1
+    x = encoded.iloc[:, 0:ds_size].values
+    y = encoded.iloc[:, ds_size].values
+
+    tree_para = {'max_depth':[4,5,6,7,8,9,10,11,12,15,20,30,40,50,70,90,120,150]}
+    clf = GridSearchCV(tree.DecisionTreeRegressor(), tree_para, cv=5)
+    clf.fit(x, y)
+
+    best_parameters = clf.best_params_
+    print(best_parameters)
 
 def run_kfold():    
     dataset = pandas.read_csv("processed.csv")
@@ -54,13 +72,13 @@ def run():
     x_train = sc.fit_transform(x_train)
     x_test = sc.transform(x_test)
 
-    treeRegressor = tree.DecisionTreeRegressor()
+    treeRegressor = tree.DecisionTreeRegressor(max_depth=5, max_leaf_nodes=15)
     treeRegressor = treeRegressor.fit(x_train, y_train)
-    # print(tree.plot_tree(treeRegressor))
-    # tree.plot_tree(treeRegressor)
-    # dot_data = tree.export_graphviz(treeRegressor, out_file=None)
-    # graph = graphviz.Source(dot_data)
-    # graph.render("connecticut")
+    print(tree.plot_tree(treeRegressor))
+    tree.plot_tree(treeRegressor)
+    dot_data = tree.export_graphviz(treeRegressor, out_file=None)
+    graph = graphviz.Source(dot_data)
+    graph.render("connecticut")
     y_prediction = treeRegressor.predict(x_test)
     time2 = time.time()
     print('It took %s seconds to load and train the data.' % '{0:,.2f}'.format((time2 - time1)))
